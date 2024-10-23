@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Top Tracks</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Your Top Tracks</h1>
+        <ul>
+            <!-- Loop through the tracks passed from the Flask app and display them -->
+            {% for track in tracks %}
+                <li>{{ track }}</li>
+            {% endfor %}
+        </ul>
+        <a href="/">Go Back to Home</a>
+    </div>
+</body>
+</html>

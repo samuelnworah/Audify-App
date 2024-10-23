@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Raptify Login</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <p class="welcome"> Welcome to Raptify</p>
+    <button onclick="window.location.href='{{ auth_url }}'">
+      <p class="log_in">Log in to Spotify</p>
+    </button>
+
+    <div class="pass">
+      <a href="https://accounts.spotify.com/#">Forgot your password?</a>
+      <p>Don't have an account? <a href="https://accounts.spotify.com/#">Sign up for Spotify</a></p>
+    </div>
+  </div>
+</body>
+</html>
