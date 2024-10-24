@@ -2,6 +2,9 @@ from flask import Flask, redirect, request, url_for, session, render_template
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import os
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -10,7 +13,7 @@ app.config['SESSION_COOKIE_NAME'] = 'spotify-login-session'
 # Spotify API credentials (replace with your actual credentials)
 SPOTIPY_CLIENT_ID = 'ad274f1907e7485e826c2979ca114830'
 SPOTIPY_CLIENT_SECRET = 'da13ee6f543645e8867ea7d28399c1cf'
-SPOTIPY_REDIRECT_URI = 'http://127.0.0.1:5000/callback'
+SPOTIPY_REDIRECT_URI = 'https://raptify.onrender.com/callback'
 
 # Spotify OAuth setup
 sp_oauth = SpotifyOAuth(client_id=SPOTIPY_CLIENT_ID,
