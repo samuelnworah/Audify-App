@@ -3,19 +3,211 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Top Tracks</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Your Insights</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style_2.css') }}">
 </head>
 <body>
-    <div class="container">
-        <h1>Your Top Tracks</h1>
-        <ul>
-            <!-- Loop through the tracks passed from the Flask app and display them -->
-            {% for track in tracks %}
-                <li>{{ track }}</li>
-            {% endfor %}
-        </ul>
-        <a href="/">Go Back to Home</a>
+
+    <div class="NAV">
+        <h3>Audify</h3>
+
+        
+        
+        <!-- top 10 genres section -->
+        <div class="GENRES">
+            <h2>Your Top Genres</h2>
+            <div class="genre-container">
+                {% for genre, count in top_genres %}
+                    <span class="genre-item">{{ genre }}</span>
+                {% endfor %}
+            </div>
+        </div>
     </div>
+
+    <div class="TRACKS">
+        <!-- Dropdown menu for tracks -->
+        <div class="dropdown">
+            <button class="dropbtn">Select Time Range for Tracks</button>
+            <div class="dropdown-content">
+                <a href="#" onclick="showTrackData('tracks-short-term'); return false;">Last 4 Weeks</a>
+                <a href="#" onclick="showTrackData('tracks-medium-term'); return false;">Last 6 Months</a>
+                <a href="#" onclick="showTrackData('tracks-long-term'); return false;">All Time</a>
+            </div>
+        </div>
+
+        <!-- Short-term tracks data section -->
+        <div id="tracks-short-term" class="tracks-section" style="display: none;">
+            <h2>Top 50 Tracks (Last 4 Weeks)</h2>
+            <table>
+                <tr>
+                    {% for track in tracks_short_term %}
+                        <td>
+                            <div class="track-item">
+                                {% if track.image_url %}
+                                    <img src="{{ track.image_url }}" alt="{{ track.album }} album art" width="100" height="100">
+                                {% endif %}
+                                <p>{{ track.name | truncate(30, end='...') }}<br>by {{ track.artist | truncate(30, end='...') }}<br>(Album: {{ track.album | truncate(30, end='...') }})</p>
+                                <p><strong>#{{ loop.index }}</strong></p>
+                            </div>
+                        </td>
+                        {% if loop.index % 5 == 0 %}
+                            </tr><tr>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            </table>
+        </div>
+
+        <!-- Medium-term tracks data section -->
+        <div id="tracks-medium-term" class="tracks-section">
+            <h2>Top 50 Tracks (Last 6 Months)</h2>
+            <table>
+                <tr>
+                    {% for track in tracks_medium_term %}
+                        <td>
+                            <div class="track-item">
+                                {% if track.image_url %}
+                                    <img src="{{ track.image_url }}" alt="{{ track.album }} album art" width="100" height="100">
+                                {% endif %}
+                                <p>{{ track.name | truncate(30, end='...') }}<br>by {{ track.artist | truncate(30, end='...') }}<br>(Album: {{ track.album | truncate(30, end='...') }})</p>
+                                <p><strong>#{{ loop.index }}</strong></p>
+                            </div>
+                        </td>
+                        {% if loop.index % 5 == 0 %}
+                            </tr><tr>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            </table>
+        </div>
+
+        <!-- Long-term tracks data section -->
+        <div id="tracks-long-term" class="tracks-section" style="display: none;">
+            <h2>Top 50 Tracks (All Time)</h2>
+            <table>
+                <tr>
+                    {% for track in tracks_long_term %}
+                        <td>
+                            <div class="track-item">
+                                {% if track.image_url %}
+                                    <img src="{{ track.image_url }}" alt="{{ track.album }} album art" width="100" height="100">
+                                {% endif %}
+                                <p>{{ track.name | truncate(30, end='...') }}<br>by {{ track.artist | truncate(30, end='...') }}<br>(Album: {{ track.album | truncate(30, end='...') }})</p>
+                                <p><strong>#{{ loop.index }}</strong></p>
+                            </div>
+                        </td>
+                        {% if loop.index % 5 == 0 %}
+                            </tr><tr>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="ARTISTS">
+        <!-- Dropdown menu for artists -->
+        <div class="dropdown">
+            <button class="dropbtn">Select Time Range for Artists</button>
+            <div class="dropdown-content">
+                <a href="#" onclick="showArtistData('artists-short-term'); return false;">Last 4 Weeks</a>
+                <a href="#" onclick="showArtistData('artists-medium-term'); return false;">Last 6 Months</a>
+                <a href="#" onclick="showArtistData('artists-long-term'); return false;">All Time</a>
+            </div>
+        </div>
+
+        <!-- Short-term artists data section -->
+        <div id="artists-short-term" class="artists-section" style="display: none;">
+            <h2>Top 50 Artists (Last 4 Weeks)</h2>
+            <table>
+                <tr>
+                    {% for artist in artists_short_term %}
+                        <td>
+                            <div class="artist-item">
+                                {% if artist.image_url %}
+                                    <img src="{{ artist.image_url }}" alt="{{ artist.name }} photo" width="100" height="100">
+                                {% endif %}
+                                <p>{{ artist.name }}</p>
+                                <p><strong>#{{ loop.index }}</strong></p>
+                            </div>
+                        </td>
+                        {% if loop.index % 5 == 0 %}
+                            </tr><tr>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            </table>
+        </div>
+
+        <!-- Medium-term artists data section -->
+        <div id="artists-medium-term" class="artists-section">
+            <h2>Top 50 Artists (Last 6 Months)</h2>
+            <table>
+                <tr>
+                    {% for artist in artists_medium_term %}
+                        <td>
+                            <div class="artist-item">
+                                {% if artist.image_url %}
+                                    <img src="{{ artist.image_url }}" alt="{{ artist.name }} photo" width="100" height="100">
+                                {% endif %}
+                                <p>{{ artist.name }}</p>
+                                <p><strong>#{{ loop.index }}</strong></p>
+                            </div>
+                        </td>
+                        {% if loop.index % 5 == 0 %}
+                            </tr><tr>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            </table>
+        </div>
+
+        <!-- Long-term artists data section -->
+        <div id="artists-long-term" class="artists-section" style="display: none;">
+            <h2>Top 50 Artists (All Time)</h2>
+            <table>
+                <tr>
+                    {% for artist in artists_long_term %}
+                        <td>
+                            <div class="artist-item">
+                                {% if artist.image_url %}
+                                    <img src="{{ artist.image_url }}" alt="{{ artist.name }} photo" width="100" height="100">
+                                {% endif %}
+                                <p>{{ artist.name }}</p>
+                                <p><strong>#{{ loop.index }}</strong></p>
+                            </div>
+                        </td>
+                        {% if loop.index % 5 == 0 %}
+                            </tr><tr>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <a href="http://127.0.0.1:5000/top-tracks">Go Back to Home</a>
+
+    <!-- JavaScript for switching track and artist sections -->
+    <script>
+        function showTrackData(trackTimeRange) {
+            const scrollPosition = window.scrollY; // Get the current scroll position
+            document.querySelectorAll('.tracks-section').forEach(section => {
+                section.style.display = 'none';
+            });
+            document.getElementById(trackTimeRange).style.display = 'block';
+            window.scrollTo(0, scrollPosition); // Scroll back to the stored position
+        }
+
+        function showArtistData(artistTimeRange) {
+            const scrollPosition = window.scrollY; // Get the current scroll position
+            document.querySelectorAll('.artists-section').forEach(section => {
+                section.style.display = 'none';
+            });
+            document.getElementById(artistTimeRange).style.display = 'block';
+            window.scrollTo(0, scrollPosition); // Scroll back to the stored position
+        }
+    </script>
+
 </body>
 </html>
