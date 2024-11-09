@@ -16,8 +16,7 @@ app.config['SESSION_COOKIE_NAME'] = 'spotify-login-session'
 # Spotify API credentials (replace with your actual credentials)
 SPOTIPY_CLIENT_ID = 'ad274f1907e7485e826c2979ca114830'
 SPOTIPY_CLIENT_SECRET = 'da13ee6f543645e8867ea7d28399c1cf'
-SPOTIPY_REDIRECT_URI = os.getenv("REDIRECT_URI", "http://localhost:5000/callback")
-auth_url = f"https://accounts.spotify.com/authorize?client_id={SPOTIPY_CLIENT_ID}&response_type=code&redirect_uri={SPOTIPY_REDIRECT_URI}&scope=user-read-private"
+SPOTIPY_REDIRECT_URI = 'https://audi-fy-67176c9dbd0e.herokuapp.com/callback'
 
 
 # Spotify OAuth setup
