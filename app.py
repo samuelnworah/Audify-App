@@ -25,6 +25,17 @@ sp_oauth = SpotifyOAuth(client_id=SPOTIPY_CLIENT_ID,
                         redirect_uri=SPOTIPY_REDIRECT_URI,
                         scope='user-top-read playlist-modify-public user-read-recently-played')
 
+def get_token():
+    token_info = session.get('token_info', None)
+    if not token_info:
+        return None
+
+    # Check if token is expired and refresh it
+    if sp_oauth.is_token_expired(token_info):
+        token_info = sp_oauth.refresh_access_token(token_info['refresh_token'])
+        session['token_info'] = token_info  # Update session with refreshed token
+    return token_info
+
 @app.route('/')
 def home():
     auth_url = sp_oauth.get_authorize_url()
@@ -32,24 +43,23 @@ def home():
 
 @app.route('/callback')
 def callback():
-    session.clear()
+    session.clear()  # Clear previous session data
     code = request.args.get('code')
     
     if code:
         token_info = sp_oauth.get_access_token(code)
-        session['token_info'] = token_info
+        session['token_info'] = token_info  # Store token in session
         return redirect('/top-tracks')
     
     return redirect('/')
 
 @app.route('/top-tracks')
 def top_tracks():
-    token_info = session.get('token_info', None)
+    token_info = get_token()
     if not token_info:
-        return redirect('/')
+        return redirect('/')  # Redirect to login if token is missing or expired
     
     sp = spotipy.Spotify(auth=token_info['access_token'])
-
 
     # Fetch top data for various time ranges
     top_tracks_short_term = sp.current_user_top_tracks(limit=50, time_range='short_term')
@@ -60,8 +70,6 @@ def top_tracks():
     top_artists_long_term = sp.current_user_top_artists(limit=50, time_range='long_term')
     featured_playlists = sp.featured_playlists(limit=10)
     
-
-
     # Prepare data for display
     track_data_short_term = [{'name': track['name'], 'artist': track['artists'][0]['name'], 'album': track['album']['name'], 'image_url': track['album']['images'][0]['url'] if track['album']['images'] else None} for track in top_tracks_short_term['items']]
     artist_data_short_term = [{'name': artist['name'], 'image_url': artist['images'][0]['url'] if artist['images'] else None} for artist in top_artists_short_term['items']]
@@ -70,7 +78,6 @@ def top_tracks():
     track_data_long_term = [{'name': track['name'], 'artist': track['artists'][0]['name'], 'album': track['album']['name'], 'image_url': track['album']['images'][0]['url'] if track['album']['images'] else None} for track in top_tracks_long_term['items']]
     artist_data_long_term = [{'name': artist['name'], 'image_url': artist['images'][0]['url'] if artist['images'] else None} for artist in top_artists_long_term['items']]
     playlists_data = [{'name': playlist['name'],'description': playlist['description'],'image_url': playlist['images'][0]['url'] if playlist['images'] else None,'playlist_url': playlist['external_urls']['spotify']} for playlist in featured_playlists['playlists']['items']]
-
 
     # Fetch and display genres (example logic for recommendations and genres)
     user_top_artists = sp.current_user_top_artists(limit=50, time_range='medium_term')
@@ -97,7 +104,10 @@ def top_tracks():
         featured_playlists=playlists_data
     )
 
-
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect('/')
 
 
 if __name__ == '__main__':
